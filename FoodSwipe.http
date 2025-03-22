@@ -1,0 +1,6 @@
+@FoodSwipe_HostAddress = http://localhost:5101
+
+GET {{FoodSwipe_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
