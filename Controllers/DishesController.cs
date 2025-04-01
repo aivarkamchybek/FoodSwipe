@@ -53,5 +53,24 @@ namespace FoodSwipe.Controllers
 
             return recommendedDishes;
         }
+
+        // Get most liked dishes
+        [HttpGet("most-liked")]
+        public async Task<ActionResult<IEnumerable<Dish>>> GetMostLikedDishes()
+        {
+            var mostLikedDishes = await _context.Interactions
+                .Where(i => i.Liked) // Filter only liked interactions
+                .GroupBy(i => i.DishId)
+                .OrderByDescending(g => g.Count()) // Order by likes count
+                .Take(10) // Limit results
+                .Select(g => g.Key) // Get dish IDs
+                .ToListAsync();
+
+            var dishes = await _context.Dishes
+                .Where(d => mostLikedDishes.Contains(d.Id))
+                .ToListAsync();
+
+            return dishes;
+        }
     }
 }
